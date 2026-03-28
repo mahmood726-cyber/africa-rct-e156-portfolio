@@ -1,0 +1,42 @@
+[
+  {
+    "repo": "malaria-e156",
+    "title": "Lean Africa-site malaria RCTs as a transfer template",
+    "display": "malaria",
+    "n": "80",
+    "k": "27",
+    "ci": "0.24 to 0.45",
+    "note": "27 of 80 Africa-site malaria trials met the pragmatic transfer shortlist; malaria has the strongest cross-topic shortlist signal",
+    "path": "/mnt/c/Users/user/africa_rct_efficiency_ctgov/repos/malaria-e156"
+  },
+  {
+    "repo": "hiv-e156",
+    "title": "Lean Africa-site HIV RCTs as a transfer template",
+    "display": "HIV",
+    "n": "80",
+    "k": "18",
+    "ci": "0.15 to 0.33",
+    "note": "18 of 80 Africa-site HIV trials met the pragmatic transfer shortlist",
+    "path": "/mnt/c/Users/user/africa_rct_efficiency_ctgov/repos/hiv-e156"
+  },
+  {
+    "repo": "hypertension-e156",
+    "title": "Lean Africa-site hypertension RCTs as a transfer template",
+    "display": "hypertension",
+    "n": "65",
+    "k": "8",
+    "ci": "0.06 to 0.22",
+    "note": "8 of 65 Africa-site hypertension trials met the pragmatic transfer shortlist",
+    "path": "/mnt/c/Users/user/africa_rct_efficiency_ctgov/repos/hypertension-e156"
+  },
+  {
+    "repo": "maternal-health-e156",
+    "title": "Lean Africa-site pregnancy-related RCTs as a transfer template",
+    "display": "pregnancy-related maternal health",
+    "n": "80",
+    "k": "12",
+    "ci": "0.09 to 0.24",
+    "note": "12 of 80 Africa-site pregnancy-related trials met the pragmatic transfer shortlist",
+    "path": "/mnt/c/Users/user/africa_rct_efficiency_ctgov/repos/maternal-health-e156"
+  }
+]
