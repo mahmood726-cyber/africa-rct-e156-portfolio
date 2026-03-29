@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "MANIFEST.json"
 INDEX_PATH = ROOT / "index.html"
 MATRIX_PATH = ROOT / "TOPIC_MATRIX.md"
+PORTFOLIO_PUBLIC_URL = "https://github.com/mahmood726-cyber/africa-rct-e156-portfolio"
 
 BADGES = [
     "Recommended First",
@@ -63,13 +64,25 @@ def matrix_readout(entry: dict[str, Any]) -> str:
     }[entry["repo"]]
 
 
+def repo_blob_url(entry: dict[str, Any], relpath: str) -> str:
+    return f"{entry['public_url']}/blob/main/{relpath}"
+
+
+def repo_tree_url(entry: dict[str, Any], relpath: str) -> str:
+    return f"{entry['public_url']}/tree/main/{relpath}"
+
+
+def portfolio_blob_url(relpath: str) -> str:
+    return f"{PORTFOLIO_PUBLIC_URL}/blob/main/{relpath}"
+
+
 def render_topic_cards(entries: list[dict[str, Any]]) -> str:
     chunks: list[str] = []
     for idx, entry in enumerate(entries):
         featured = " featured" if idx == 0 else ""
         badge = str(entry.get("portfolio_badge") or (BADGES[idx] if idx < len(BADGES) else "Portfolio Topic"))
         chunks.append(
-            f"""          <a class="topic-card{featured}" href="{entry['public_url']}">
+            f"""          <article class="topic-card{featured}">
             <div class="topic-badge">{badge}</div>
             <h3>{topic_label(entry)}</h3>
             <p>{card_summary(entry)}</p>
@@ -79,8 +92,13 @@ def render_topic_cards(entries: list[dict[str, Any]]) -> str:
               <div><strong>{entry['median_duration_days']}</strong><span>median duration</span></div>
             </div>
             <p>{card_detail(entry)}</p>
-            <span class="topic-link">Open repo</span>
-          </a>"""
+            <div class="topic-actions">
+              <a class="topic-action topic-action-primary" href="{repo_blob_url(entry, 'paper/e156_body.md')}">Read E156</a>
+              <a class="topic-action" href="{repo_tree_url(entry, 'data')}">Data</a>
+              <a class="topic-action" href="{repo_tree_url(entry, 'code')}">Code</a>
+              <a class="topic-action" href="{entry['public_url']}">Repo</a>
+            </div>
+          </article>"""
         )
     return "\n".join(chunks)
 
@@ -227,6 +245,11 @@ def render_index(entries: list[dict[str, Any]]) -> str:
     }}
 
     .topbar nav a {{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
       color: var(--muted);
       text-decoration: none;
     }}
@@ -410,8 +433,6 @@ def render_index(entries: list[dict[str, Any]]) -> str:
 
     .topic-card {{
       padding: 22px;
-      text-decoration: none;
-      color: inherit;
       position: relative;
       overflow: hidden;
       transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
@@ -484,15 +505,38 @@ def render_index(entries: list[dict[str, Any]]) -> str:
       line-height: 1.3;
     }}
 
-    .topic-link {{
+    .topic-actions {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }}
+
+    .topic-action {{
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      margin-top: 16px;
-      color: var(--teal-deep);
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(31, 45, 42, 0.12);
+      background: rgba(255, 250, 240, 0.86);
+      color: var(--ink);
       font-family: "Space Grotesk", sans-serif;
       font-weight: 700;
       text-decoration: none;
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }}
+
+    .topic-action:hover {{
+      transform: translateY(-1px);
+      border-color: rgba(31, 122, 114, 0.25);
+    }}
+
+    .topic-action-primary {{
+      color: #fffaf3;
+      background: linear-gradient(135deg, var(--teal), var(--teal-deep));
+      border-color: transparent;
     }}
 
     .use-grid,
@@ -592,17 +636,15 @@ def render_index(entries: list[dict[str, Any]]) -> str:
     }}
 
     [data-reveal] {{
-      opacity: 0;
-      transform: translateY(18px);
-      animation: rise 700ms ease forwards;
+      animation: rise 380ms ease;
     }}
 
-    [data-reveal="2"] {{ animation-delay: 90ms; }}
-    [data-reveal="3"] {{ animation-delay: 180ms; }}
-    [data-reveal="4"] {{ animation-delay: 270ms; }}
-    [data-reveal="5"] {{ animation-delay: 360ms; }}
-
     @keyframes rise {{
+      from {{
+        opacity: 0.92;
+        transform: translateY(10px);
+      }}
+
       to {{
         opacity: 1;
         transform: translateY(0);
@@ -675,6 +717,43 @@ def render_index(entries: list[dict[str, Any]]) -> str:
         display: block;
       }}
     }}
+
+    @media (max-width: 560px) {{
+      .topbar {{
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }}
+
+      .topbar .eyebrow {{
+        font-size: 0.74rem;
+        letter-spacing: 0.06em;
+      }}
+
+      .topbar nav {{
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }}
+
+      .topbar nav a {{
+        min-height: 40px;
+        padding: 0 8px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        background: rgba(255, 250, 240, 0.84);
+        border: 1px solid rgba(31, 45, 42, 0.12);
+      }}
+
+      .hero-actions {{
+        flex-direction: column;
+      }}
+
+      .hero-actions .button {{
+        width: 100%;
+      }}
+    }}
   </style>
 </head>
 <body>
@@ -684,7 +763,7 @@ def render_index(entries: list[dict[str, Any]]) -> str:
         <div class="eyebrow">Africa RCT E156 Portfolio</div>
         <nav aria-label="Section links">
           <a href="#topics">Topics</a>
-          <a href="#use">How To Use</a>
+          <a href="#use">Guide</a>
           <a href="#files">Files</a>
         </nav>
       </div>
@@ -697,7 +776,7 @@ def render_index(entries: list[dict[str, Any]]) -> str:
             This portfolio packages four Africa-site RCT topic scans as strict E156 publication units: one validated 156-word body per topic, plus companion code, data, and HTML artifacts. Malaria is the strongest first entry point under these registry-based proxy measures if the goal is to find smaller-footprint, faster-reporting trial patterns.
           </p>
           <div class="hero-actions">
-            <a class="button button-primary" href="{featured['public_url']}">Start With Malaria</a>
+            <a class="button button-primary" href="{repo_blob_url(featured, 'paper/e156_body.md')}">Read Malaria E156</a>
             <a class="button button-secondary" href="#topics">Compare All Topics</a>
           </div>
         </section>
@@ -762,7 +841,8 @@ def render_index(entries: list[dict[str, Any]]) -> str:
           <div class="callout">
             <h3>For Deeper Inspection</h3>
             <ul>
-              <li>Open each repo’s <code>paper/index.html</code> companion for the richer artifact layer.</li>
+              <li>Use the topic buttons to jump straight to each repo’s E156 body, data files, and code files.</li>
+              <li>Open each repo’s <code>paper/</code> folder if you want the companion HTML and the rest of the paper bundle.</li>
               <li>Use the repo <code>data/</code> folders for benchmark outputs and shortlist files.</li>
               <li>Use the repo <code>code/</code> folders if you want to rerun or extend the scans.</li>
             </ul>
@@ -799,21 +879,21 @@ def render_index(entries: list[dict[str, Any]]) -> str:
         </div>
 
         <div class="resource-list">
-          <a href="TOPIC_MATRIX.md">
+          <a href="{portfolio_blob_url('TOPIC_MATRIX.md')}">
             <strong>Topic Matrix</strong>
-            <span>Side-by-side comparison of benchmark size, shortlist size, proportions, timing, and practical readouts.</span>
+            <span>GitHub view of the side-by-side comparison of benchmark size, shortlist size, proportions, timing, and practical readouts.</span>
           </a>
-          <a href="MANIFEST.json">
+          <a href="{portfolio_blob_url('MANIFEST.json')}">
             <strong>Manifest</strong>
-            <span>Machine-readable list of public URLs, ordering metadata, release mode, and headline metrics.</span>
+            <span>GitHub view of the machine-readable public URLs, ordering metadata, release mode, and headline metrics.</span>
           </a>
-          <a href="data/topic_comparison.md">
+          <a href="{portfolio_blob_url('data/topic_comparison.md')}">
             <strong>Topic Comparison Note</strong>
-            <span>Underlying cross-topic narrative explaining why malaria has the strongest proxy-based signal in this scan.</span>
+            <span>GitHub view of the underlying cross-topic narrative explaining why malaria has the strongest proxy-based signal in this scan.</span>
           </a>
-          <a href="data/malaria_deep_dive_summary.md">
+          <a href="{portfolio_blob_url('data/malaria_deep_dive_summary.md')}">
             <strong>Malaria Deep Dive</strong>
-            <span>Deeper malaria-only readout on structured outcomes, heuristic leadership tags, and several excluded off-topic registry hits.</span>
+            <span>GitHub view of the deeper malaria-only readout on structured outcomes, heuristic leadership tags, and several excluded off-topic registry hits.</span>
           </a>
         </div>
       </section>
