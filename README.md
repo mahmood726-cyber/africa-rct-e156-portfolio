@@ -8,6 +8,7 @@ Across the four scanned domains, malaria is the strongest starting point if the 
 
 ## Start Here
 
+- Open `index.html` for the visual landing page.
 - Read [`TOPIC_MATRIX.md`](TOPIC_MATRIX.md) for the side-by-side comparison.
 - If you want the strongest first example set, start with `malaria-e156`.
 - If you want the underlying cross-topic narrative, read `data/topic_comparison.md`.
@@ -41,6 +42,7 @@ Across the four scanned domains, malaria is the strongest starting point if the 
 
 ## Included Portfolio Files
 
+- `index.html`: visual landing page and repo entry point
 - `TOPIC_MATRIX.md`: side-by-side topic snapshot
 - `data/topic_comparison.md`: copied comparison note
 - `MANIFEST.json`: local repo paths and key metrics
