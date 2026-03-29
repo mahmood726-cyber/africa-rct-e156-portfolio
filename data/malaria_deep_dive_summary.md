@@ -8,27 +8,27 @@ This malaria-first layer adds two analytical layers on top of the existing bench
 ## Coverage
 
 - Registry benchmark studies loaded: 80
-- Malaria-relevant studies after topical validation: 73
-- Transfer shortlist studies after topical validation: 25
-- Studies with structured primary analyses: 30
+- Malaria-relevant studies after topical validation: 69
+- Transfer shortlist studies after topical validation: 23
+- Studies with structured primary analyses: 29
 - Studies with primary p-values: 21
-- Studies with primary effect estimates or CIs: 26
+- Studies with primary effect estimates or CIs: 25
 
 ## Leadership Heuristic
 
-- All studies: likely_externally_run (63), mixed_local_site_with_external_sponsor (10)
-- Transfer shortlist only: likely_externally_run (21), mixed_local_site_with_external_sponsor (4)
+- All studies: likely_externally_run (60), mixed_local_site_with_external_sponsor (9)
+- Transfer shortlist only: likely_externally_run (19), mixed_local_site_with_external_sponsor (4)
 
 These leadership labels are heuristics, not definitive authorship or funding adjudications.
 
 ## Primary Signal Buckets
 
-- no_primary_analysis_structured (43), effect_estimate_no_significance (17), effect_estimate_with_significance (9), analysis_reported_no_numeric_signal (3), significant_pvalue_only (1)
+- no_primary_analysis_structured (40), effect_estimate_no_significance (16), effect_estimate_with_significance (9), analysis_reported_no_numeric_signal (3), significant_pvalue_only (1)
 
 ## What Looks Most Transferable
 
 - The strongest malaria pattern remains single-country, often single-site trials with moderate enrollment.
-- Countries most represented among the top topical-validated local-or-mixed candidates: Mali (4), Uganda (2), Burkina Faso (2), Tanzania (1), Ghana (1)
+- Countries most represented among the top topical-validated local-or-mixed candidates: Mali (4), Uganda (2), Tanzania (1), Ghana (1), South Africa (1)
 - Mixed local-site participation may be more operationally informative than clearly external sponsor-led studies, but the leadership split remains heuristic.
 
 ## Top Likely Local Candidates
@@ -45,7 +45,6 @@ These leadership labels are heuristics, not definitive authorship or funding adj
 - NCT00349713: FMP2.1/AS02A: Rabies Vaccine Malaria-Experienced Adults in Bandiagara, Mali | mixed_local_site_with_external_sponsor | Mali | priority 41.61
 - NCT04566510: LLIN Evaluation in Uganda Project | mixed_local_site_with_external_sponsor | Uganda | priority 39.97
 - NCT04336189: Optimal Chemopreventive Regimens to Prevent Malaria and Improve Birth Outcomes in Uganda | mixed_local_site_with_external_sponsor | Uganda | priority 38.77
-- NCT03676764: Community Health Azithromycin Trial in Burkina Faso | mixed_local_site_with_external_sponsor | Burkina Faso | priority 37.13
 - NCT04319380: Seasonal Malaria Vaccination (RTS,S/AS01) and Seasonal Malaria Chemoprevention (SP/AQ) Extension Study | mixed_local_site_with_external_sponsor | Burkina Faso | Mali | priority 34.09
 
 ## Caveat

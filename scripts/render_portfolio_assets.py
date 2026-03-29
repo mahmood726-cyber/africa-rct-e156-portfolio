@@ -119,7 +119,7 @@ def render_index(entries: list[dict[str, Any]]) -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Africa RCT E156 Portfolio</title>
-  <meta name="description" content="A portfolio of four strict E156 micro-papers on Africa-site randomized trials, with malaria as the strongest first entry point for lean RCT templates.">
+  <meta name="description" content="A portfolio of four strict E156 micro-papers on Africa-site randomized trials, with malaria as the strongest first entry point under registry-based proxy measures for smaller-footprint, faster-reporting trial patterns.">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap');
 
