@@ -40,6 +40,11 @@ Across the four scanned domains, malaria is the strongest starting point if the 
 - Use the repo `data/` and `code/` folders if you want to inspect or extend the benchmark.
 - Use `MANIFEST.json` if you want machine-readable repo paths, URLs, and headline metrics.
 
+## Regeneration
+
+- `index.html` and `TOPIC_MATRIX.md` are generated from `MANIFEST.json`.
+- Rebuild them with `python3 scripts/render_portfolio_assets.py`.
+
 ## Included Portfolio Files
 
 - `index.html`: visual landing page and repo entry point

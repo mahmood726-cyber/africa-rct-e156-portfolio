@@ -1,4 +1,123 @@
-<!doctype html>
+#!/usr/bin/env python3
+"""Render the portfolio landing page and topic matrix from MANIFEST.json."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+MANIFEST_PATH = ROOT / "MANIFEST.json"
+INDEX_PATH = ROOT / "index.html"
+MATRIX_PATH = ROOT / "TOPIC_MATRIX.md"
+
+BADGES = [
+    "Recommended First",
+    "Second Pass",
+    "Selective Use",
+    "Lowest Priority",
+]
+
+
+def load_manifest() -> list[dict[str, str]]:
+    return json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+
+
+def topic_display(entry: dict[str, str]) -> str:
+    value = entry["display"]
+    return "maternal health" if value == "pregnancy-related maternal health" else value
+
+
+def card_summary(entry: dict[str, str]) -> str:
+    notes = {
+        "malaria-e156": "Strongest shortlist signal and broadest African country spread in this portfolio.",
+        "hiv-e156": "Reusable lean designs exist, but they are more concentrated in established infrastructure hubs.",
+        "maternal-health-e156": "Smaller shortlist overall, but still contains lower-footprint pregnancy-related designs.",
+        "hypertension-e156": "Weakest shortlist signal and longest Africa-side trial durations in this set.",
+    }
+    return notes[entry["repo"]]
+
+
+def card_detail(entry: dict[str, str]) -> str:
+    details = {
+        "malaria-e156": "Best first repo if the question is which domain already shows the clearest lean African trial templates.",
+        "hiv-e156": "Useful if the aim is to study transfer templates in settings with stronger lab and follow-up systems.",
+        "maternal-health-e156": "Worth using when the delivery question is focused on maternal or pregnancy-related operations.",
+        "hypertension-e156": "Best treated as a contrast case rather than the first model for low-burden African RCT delivery.",
+    }
+    return details[entry["repo"]]
+
+
+def matrix_readout(entry: dict[str, str]) -> str:
+    return {
+        "malaria-e156": "strongest cross-topic shortlist signal and broad African spread",
+        "hiv-e156": "reusable lean designs, but more dependent on established trial hubs",
+        "hypertension-e156": "weakest shortlist signal and longest Africa-side durations",
+        "maternal-health-e156": "smaller shortlist, but some useful lower-footprint designs",
+    }[entry["repo"]]
+
+
+def render_topic_cards(entries: list[dict[str, str]]) -> str:
+    chunks: list[str] = []
+    for idx, entry in enumerate(entries):
+        featured = " featured" if idx == 0 else ""
+        badge = BADGES[idx] if idx < len(BADGES) else "Portfolio Topic"
+        chunks.append(
+            f"""          <a class="topic-card{featured}" href="{entry['public_url']}">
+            <div class="topic-badge">{badge}</div>
+            <h3>{topic_display(entry).title() if topic_display(entry) != 'HIV' else 'HIV'}</h3>
+            <p>{card_summary(entry)}</p>
+            <div class="topic-stats">
+              <div><strong>{entry['k']}/{entry['n']}</strong><span>shortlist</span></div>
+              <div><strong>{entry['proportion']}</strong><span>proportion</span></div>
+              <div><strong>{entry['median_duration_days']}</strong><span>median duration</span></div>
+            </div>
+            <p>{card_detail(entry)}</p>
+            <span class="topic-link">Open repo</span>
+          </a>"""
+        )
+    return "\n".join(chunks)
+
+
+def render_snapshot(entries: list[dict[str, str]]) -> str:
+    return "\n".join(
+        f"          <li><strong>{topic_display(entry)}</strong>: <code>{entry['k']}/{entry['n']}</code> shortlist studies, proportion <code>{entry['proportion']}</code>, 95% CI <code>{entry['ci']}</code></li>"
+        for entry in entries
+    )
+
+
+def render_matrix(entries: list[dict[str, str]]) -> str:
+    lines = [
+        "# Topic Matrix",
+        "",
+        "All four topic repos are maintained in strict `E156` release mode.",
+        "",
+        "| Repo | Public Repo | Topic | Benchmark N | Shortlist N | Proportion | 95% CI | Median Duration Days | Median Results Lag Days | Main Readout |",
+        "|---|---|---|---:|---:|---:|---|---:|---:|---|",
+    ]
+    for entry in entries:
+        lines.append(
+            f"| `{entry['repo']}` | `{entry['public_url'].replace('https://github.com/', '')}` | {entry['display']} | {entry['n']} | {entry['k']} | {entry['proportion']} | {entry['ci']} | {entry['median_duration_days']} | {entry['median_results_lag_days']} | {matrix_readout(entry)} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Reading Order",
+            "",
+            "1. `malaria-e156`",
+            "2. `hiv-e156`",
+            "3. `maternal-health-e156`",
+            "4. `hypertension-e156`",
+            "",
+            "_Generated from `MANIFEST.json` by `scripts/render_portfolio_assets.py`._",
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
+def render_index(entries: list[dict[str, str]]) -> str:
+    featured = entries[0]
+    return f"""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -8,7 +127,7 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap');
 
-    :root {
+    :root {{
       --bg: #f7f1e3;
       --bg-accent: #efe2bf;
       --surface: rgba(255, 252, 243, 0.92);
@@ -23,17 +142,17 @@
       --shadow: 0 24px 70px rgba(32, 43, 39, 0.14);
       --radius: 24px;
       --max: 1180px;
-    }
+    }}
 
-    * {
+    * {{
       box-sizing: border-box;
-    }
+    }}
 
-    html {
+    html {{
       scroll-behavior: smooth;
-    }
+    }}
 
-    body {
+    body {{
       margin: 0;
       color: var(--ink);
       font-family: "Source Serif 4", Georgia, serif;
@@ -41,9 +160,9 @@
         radial-gradient(circle at 15% 15%, rgba(215, 169, 59, 0.25), transparent 28%),
         radial-gradient(circle at 88% 12%, rgba(31, 122, 114, 0.18), transparent 26%),
         linear-gradient(180deg, #fbf7eb 0%, var(--bg) 42%, #f4edd8 100%);
-    }
+    }}
 
-    body::before {
+    body::before {{
       content: "";
       position: fixed;
       inset: 0;
@@ -53,22 +172,22 @@
       background-size: 28px 28px;
       pointer-events: none;
       z-index: -1;
-    }
+    }}
 
-    a {
+    a {{
       color: inherit;
-    }
+    }}
 
-    .shell {
+    .shell {{
       width: min(var(--max), calc(100% - 32px));
       margin: 0 auto;
-    }
+    }}
 
-    .hero {
+    .hero {{
       padding: 28px 0 24px;
-    }
+    }}
 
-    .topbar {
+    .topbar {{
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -80,9 +199,9 @@
       background: rgba(255, 252, 243, 0.72);
       backdrop-filter: blur(10px);
       box-shadow: 0 10px 28px rgba(32, 43, 39, 0.08);
-    }
+    }}
 
-    .eyebrow {
+    .eyebrow {{
       display: inline-flex;
       align-items: center;
       gap: 10px;
@@ -92,60 +211,60 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--teal-deep);
-    }
+    }}
 
-    .eyebrow::before {
+    .eyebrow::before {{
       content: "";
       width: 12px;
       height: 12px;
       border-radius: 999px;
       background: linear-gradient(135deg, var(--gold), var(--rust));
       box-shadow: 0 0 0 6px rgba(215, 169, 59, 0.16);
-    }
+    }}
 
-    .topbar nav {
+    .topbar nav {{
       display: flex;
       flex-wrap: wrap;
       gap: 14px;
       font-family: "Space Grotesk", sans-serif;
       font-size: 0.92rem;
-    }
+    }}
 
-    .topbar nav a {
+    .topbar nav a {{
       color: var(--muted);
       text-decoration: none;
-    }
+    }}
 
-    .topbar nav a:hover {
+    .topbar nav a:hover {{
       color: var(--teal-deep);
-    }
+    }}
 
-    .hero-grid {
+    .hero-grid {{
       display: grid;
       grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.85fr);
       gap: 22px;
       align-items: stretch;
-    }
+    }}
 
     .hero-copy,
     .hero-panel,
     .section-card,
     .topic-card,
-    .callout {
+    .callout {{
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
-    }
+    }}
 
-    .hero-copy {
+    .hero-copy {{
       padding: 34px;
       position: relative;
       overflow: hidden;
-    }
+    }}
 
-    .hero-copy::after {
+    .hero-copy::after {{
       content: "";
       position: absolute;
       width: 220px;
@@ -154,39 +273,39 @@
       right: -80px;
       bottom: -80px;
       background: radial-gradient(circle, rgba(31, 122, 114, 0.18), transparent 70%);
-    }
+    }}
 
-    h1, h2, h3 {
+    h1, h2, h3 {{
       font-family: "Space Grotesk", sans-serif;
       line-height: 1.02;
       margin: 0;
-    }
+    }}
 
-    h1 {
+    h1 {{
       font-size: clamp(2.8rem, 6vw, 5.6rem);
       letter-spacing: -0.05em;
       max-width: 11ch;
       margin-top: 20px;
-    }
+    }}
 
-    .lead {
+    .lead {{
       font-size: clamp(1.08rem, 1.2vw, 1.24rem);
       line-height: 1.58;
       color: var(--muted);
       max-width: 62ch;
       margin: 18px 0 0;
-    }
+    }}
 
-    .hero-actions {
+    .hero-actions {{
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
       margin-top: 28px;
       position: relative;
       z-index: 1;
-    }
+    }}
 
-    .button {
+    .button {{
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -198,130 +317,130 @@
       font-weight: 700;
       text-decoration: none;
       transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
-    }
+    }}
 
-    .button:hover {
+    .button:hover {{
       transform: translateY(-1px);
-    }
+    }}
 
-    .button-primary {
+    .button-primary {{
       color: #fffaf3;
       background: linear-gradient(135deg, var(--teal), var(--teal-deep));
       box-shadow: 0 16px 34px rgba(15, 95, 88, 0.26);
-    }
+    }}
 
-    .button-secondary {
+    .button-secondary {{
       color: var(--ink);
       background: rgba(255, 250, 240, 0.84);
       border: 1px solid rgba(31, 45, 42, 0.14);
-    }
+    }}
 
-    .hero-panel {
+    .hero-panel {{
       padding: 26px;
       display: grid;
       gap: 16px;
       align-content: start;
-    }
+    }}
 
-    .hero-panel h2 {
+    .hero-panel h2 {{
       font-size: 1.28rem;
       letter-spacing: -0.03em;
-    }
+    }}
 
-    .metric-grid {
+    .metric-grid {{
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
-    }
+    }}
 
-    .metric {
+    .metric {{
       padding: 16px;
       border-radius: 18px;
       background: rgba(255, 250, 240, 0.82);
       border: 1px solid rgba(31, 45, 42, 0.08);
-    }
+    }}
 
-    .metric strong {
+    .metric strong {{
       display: block;
       font-family: "Space Grotesk", sans-serif;
       font-size: 1.55rem;
       letter-spacing: -0.04em;
       margin-bottom: 4px;
-    }
+    }}
 
-    .metric span {
+    .metric span {{
       color: var(--muted);
       font-size: 0.94rem;
       line-height: 1.35;
-    }
+    }}
 
-    main {
+    main {{
       padding: 8px 0 42px;
-    }
+    }}
 
-    .section {
+    .section {{
       margin-top: 26px;
-    }
+    }}
 
-    .section-card {
+    .section-card {{
       padding: 28px;
-    }
+    }}
 
-    .section-head {
+    .section-head {{
       display: flex;
       align-items: end;
       justify-content: space-between;
       gap: 16px;
       margin-bottom: 18px;
-    }
+    }}
 
-    .section-head p {
+    .section-head p {{
       margin: 10px 0 0;
       color: var(--muted);
       max-width: 62ch;
       line-height: 1.55;
-    }
+    }}
 
-    .topics {
+    .topics {{
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 16px;
-    }
+    }}
 
-    .topic-card {
+    .topic-card {{
       padding: 22px;
       text-decoration: none;
       color: inherit;
       position: relative;
       overflow: hidden;
       transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
-    }
+    }}
 
-    .topic-card:hover {
+    .topic-card:hover {{
       transform: translateY(-3px);
       border-color: rgba(31, 122, 114, 0.28);
       box-shadow: 0 28px 58px rgba(32, 43, 39, 0.16);
-    }
+    }}
 
-    .topic-card.featured {
+    .topic-card.featured {{
       background:
         linear-gradient(160deg, rgba(31, 122, 114, 0.1), rgba(215, 169, 59, 0.12)),
         var(--surface-strong);
-    }
+    }}
 
-    .topic-card h3 {
+    .topic-card h3 {{
       font-size: 1.3rem;
       letter-spacing: -0.03em;
       margin-bottom: 10px;
-    }
+    }}
 
-    .topic-card p {
+    .topic-card p {{
       margin: 0;
       color: var(--muted);
       line-height: 1.5;
-    }
+    }}
 
-    .topic-badge {
+    .topic-badge {{
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -335,36 +454,36 @@
       font-weight: 700;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-    }
+    }}
 
-    .topic-stats {
+    .topic-stats {{
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
       margin: 18px 0 16px;
-    }
+    }}
 
-    .topic-stats div {
+    .topic-stats div {{
       padding: 10px 10px 12px;
       border-radius: 16px;
       background: rgba(255, 250, 240, 0.76);
       border: 1px solid rgba(31, 45, 42, 0.08);
-    }
+    }}
 
-    .topic-stats strong {
+    .topic-stats strong {{
       display: block;
       font-family: "Space Grotesk", sans-serif;
       font-size: 1.02rem;
       margin-bottom: 2px;
-    }
+    }}
 
-    .topic-stats span {
+    .topic-stats span {{
       color: var(--muted);
       font-size: 0.78rem;
       line-height: 1.3;
-    }
+    }}
 
-    .topic-link {
+    .topic-link {{
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -373,56 +492,56 @@
       font-family: "Space Grotesk", sans-serif;
       font-weight: 700;
       text-decoration: none;
-    }
+    }}
 
     .use-grid,
-    .reading-grid {
+    .reading-grid {{
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px;
-    }
+    }}
 
-    .callout {
+    .callout {{
       padding: 20px 22px;
       background: rgba(255, 250, 240, 0.9);
-    }
+    }}
 
-    .callout h3 {
+    .callout h3 {{
       font-size: 1.06rem;
       margin-bottom: 10px;
-    }
+    }}
 
     .callout p,
-    .callout li {
+    .callout li {{
       color: var(--muted);
       line-height: 1.55;
-    }
+    }}
 
     .callout ul,
-    .callout ol {
+    .callout ol {{
       margin: 0;
       padding-left: 20px;
-    }
+    }}
 
-    .snapshot-list {
+    .snapshot-list {{
       margin: 18px 0 0;
       padding-left: 20px;
       color: var(--muted);
-    }
+    }}
 
-    .snapshot-list li {
+    .snapshot-list li {{
       line-height: 1.55;
       margin-bottom: 8px;
-    }
+    }}
 
-    .resource-list {
+    .resource-list {{
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
       margin-top: 18px;
-    }
+    }}
 
-    .resource-list a {
+    .resource-list a {{
       display: block;
       padding: 16px 18px;
       border-radius: 18px;
@@ -430,29 +549,29 @@
       border: 1px solid rgba(31, 45, 42, 0.1);
       text-decoration: none;
       transition: transform 180ms ease, border-color 180ms ease;
-    }
+    }}
 
-    .resource-list a:hover {
+    .resource-list a:hover {{
       transform: translateY(-2px);
       border-color: rgba(31, 122, 114, 0.25);
-    }
+    }}
 
-    .resource-list strong {
+    .resource-list strong {{
       display: block;
       font-family: "Space Grotesk", sans-serif;
       margin-bottom: 4px;
-    }
+    }}
 
-    .resource-list span {
+    .resource-list span {{
       color: var(--muted);
       line-height: 1.45;
-    }
+    }}
 
-    footer {
+    footer {{
       padding: 0 0 36px;
-    }
+    }}
 
-    .footer-card {
+    .footer-card {{
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -463,82 +582,82 @@
       border: 1px solid var(--line);
       background: rgba(255, 252, 243, 0.76);
       box-shadow: 0 10px 30px rgba(32, 43, 39, 0.08);
-    }
+    }}
 
-    .footer-card p {
+    .footer-card p {{
       margin: 0;
       color: var(--muted);
       line-height: 1.45;
-    }
+    }}
 
-    [data-reveal] {
+    [data-reveal] {{
       opacity: 0;
       transform: translateY(18px);
       animation: rise 700ms ease forwards;
-    }
+    }}
 
-    [data-reveal="2"] { animation-delay: 90ms; }
-    [data-reveal="3"] { animation-delay: 180ms; }
-    [data-reveal="4"] { animation-delay: 270ms; }
-    [data-reveal="5"] { animation-delay: 360ms; }
+    [data-reveal="2"] {{ animation-delay: 90ms; }}
+    [data-reveal="3"] {{ animation-delay: 180ms; }}
+    [data-reveal="4"] {{ animation-delay: 270ms; }}
+    [data-reveal="5"] {{ animation-delay: 360ms; }}
 
-    @keyframes rise {
-      to {
+    @keyframes rise {{
+      to {{
         opacity: 1;
         transform: translateY(0);
-      }
-    }
+      }}
+    }}
 
-    @media (max-width: 1080px) {
+    @media (max-width: 1080px) {{
       .hero-grid,
       .topics,
       .use-grid,
       .reading-grid,
-      .resource-list {
+      .resource-list {{
         grid-template-columns: 1fr 1fr;
-      }
+      }}
 
-      .hero-grid {
+      .hero-grid {{
         grid-template-columns: 1fr;
-      }
-    }
+      }}
+    }}
 
-    @media (max-width: 720px) {
-      .shell {
+    @media (max-width: 720px) {{
+      .shell {{
         width: min(var(--max), calc(100% - 20px));
-      }
+      }}
 
-      .topbar {
+      .topbar {{
         border-radius: 28px;
         padding: 16px;
-      }
+      }}
 
       .hero-copy,
       .hero-panel,
-      .section-card {
+      .section-card {{
         padding: 22px;
-      }
+      }}
 
       .metric-grid,
       .topics,
       .use-grid,
       .reading-grid,
-      .resource-list {
+      .resource-list {{
         grid-template-columns: 1fr;
-      }
+      }}
 
-      .topic-stats {
+      .topic-stats {{
         grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
+      }}
 
-      h1 {
+      h1 {{
         max-width: 12ch;
-      }
+      }}
 
-      .section-head {
+      .section-head {{
         display: block;
-      }
-    }
+      }}
+    }}
   </style>
 </head>
 <body>
@@ -561,7 +680,7 @@
             This portfolio packages four Africa-site RCT topic scans as strict E156 publication units: one validated 156-word body per topic, plus companion code, data, and HTML artifacts. Malaria is the strongest first entry point if the goal is to find operationally lean African trial templates.
           </p>
           <div class="hero-actions">
-            <a class="button button-primary" href="https://github.com/mahmood726-cyber/malaria-e156">Start With Malaria</a>
+            <a class="button button-primary" href="{featured['public_url']}">Start With Malaria</a>
             <a class="button button-secondary" href="#topics">Compare All Topics</a>
           </div>
         </section>
@@ -570,20 +689,20 @@
           <h2>Portfolio Snapshot</h2>
           <div class="metric-grid">
             <div class="metric">
-              <strong>4</strong>
+              <strong>{len(entries)}</strong>
               <span>public topic repos in active E156 mode</span>
             </div>
             <div class="metric">
-              <strong>27/80</strong>
-              <span>malaria shortlist yield, the strongest in the set</span>
+              <strong>{featured['k']}/{featured['n']}</strong>
+              <span>{topic_display(featured)} shortlist yield, the strongest in the set</span>
             </div>
             <div class="metric">
               <strong>156</strong>
               <span>words in every active E156 release body</span>
             </div>
             <div class="metric">
-              <strong>0.34</strong>
-              <span>malaria shortlist proportion, 95% CI 0.24 to 0.45</span>
+              <strong>{featured['proportion']}</strong>
+              <span>{topic_display(featured)} shortlist proportion, 95% CI {featured['ci']}</span>
             </div>
           </div>
         </aside>
@@ -602,54 +721,7 @@
         </div>
 
         <div class="topics">
-          <a class="topic-card featured" href="https://github.com/mahmood726-cyber/malaria-e156">
-            <div class="topic-badge">Recommended First</div>
-            <h3>Malaria</h3>
-            <p>Strongest shortlist signal and broadest African country spread in this portfolio.</p>
-            <div class="topic-stats">
-              <div><strong>27/80</strong><span>shortlist</span></div>
-              <div><strong>0.34</strong><span>proportion</span></div>
-              <div><strong>619.0</strong><span>median duration</span></div>
-            </div>
-            <p>Best first repo if the question is which domain already shows the clearest lean African trial templates.</p>
-            <span class="topic-link">Open repo</span>
-          </a>
-          <a class="topic-card" href="https://github.com/mahmood726-cyber/hiv-e156">
-            <div class="topic-badge">Second Pass</div>
-            <h3>HIV</h3>
-            <p>Reusable lean designs exist, but they are more concentrated in established infrastructure hubs.</p>
-            <div class="topic-stats">
-              <div><strong>18/80</strong><span>shortlist</span></div>
-              <div><strong>0.23</strong><span>proportion</span></div>
-              <div><strong>824.5</strong><span>median duration</span></div>
-            </div>
-            <p>Useful if the aim is to study transfer templates in settings with stronger lab and follow-up systems.</p>
-            <span class="topic-link">Open repo</span>
-          </a>
-          <a class="topic-card" href="https://github.com/mahmood726-cyber/hypertension-e156">
-            <div class="topic-badge">Selective Use</div>
-            <h3>Hypertension</h3>
-            <p>Weakest shortlist signal and longest Africa-side trial durations in this set.</p>
-            <div class="topic-stats">
-              <div><strong>8/65</strong><span>shortlist</span></div>
-              <div><strong>0.12</strong><span>proportion</span></div>
-              <div><strong>999.0</strong><span>median duration</span></div>
-            </div>
-            <p>Best treated as a contrast case rather than the first model for low-burden African RCT delivery.</p>
-            <span class="topic-link">Open repo</span>
-          </a>
-          <a class="topic-card" href="https://github.com/mahmood726-cyber/maternal-health-e156">
-            <div class="topic-badge">Lowest Priority</div>
-            <h3>Maternal Health</h3>
-            <p>Smaller shortlist overall, but still contains lower-footprint pregnancy-related designs.</p>
-            <div class="topic-stats">
-              <div><strong>12/80</strong><span>shortlist</span></div>
-              <div><strong>0.15</strong><span>proportion</span></div>
-              <div><strong>902.0</strong><span>median duration</span></div>
-            </div>
-            <p>Worth using when the delivery question is focused on maternal or pregnancy-related operations.</p>
-            <span class="topic-link">Open repo</span>
-          </a>
+{render_topic_cards(entries)}
         </div>
       </section>
 
@@ -699,10 +771,7 @@
         <div class="callout" style="margin-top: 16px;">
           <h3>Portfolio Snapshot</h3>
           <ul class="snapshot-list">
-          <li><strong>malaria</strong>: <code>27/80</code> shortlist studies, proportion <code>0.34</code>, 95% CI <code>0.24 to 0.45</code></li>
-          <li><strong>HIV</strong>: <code>18/80</code> shortlist studies, proportion <code>0.23</code>, 95% CI <code>0.15 to 0.33</code></li>
-          <li><strong>hypertension</strong>: <code>8/65</code> shortlist studies, proportion <code>0.12</code>, 95% CI <code>0.06 to 0.22</code></li>
-          <li><strong>maternal health</strong>: <code>12/80</code> shortlist studies, proportion <code>0.15</code>, 95% CI <code>0.09 to 0.24</code></li>
+{render_snapshot(entries)}
           </ul>
         </div>
       </section>
@@ -747,3 +816,14 @@
   </footer>
 </body>
 </html>
+"""
+
+
+def main() -> None:
+    entries = load_manifest()
+    INDEX_PATH.write_text(render_index(entries), encoding="utf-8")
+    MATRIX_PATH.write_text(render_matrix(entries), encoding="utf-8")
+
+
+if __name__ == "__main__":
+    main()

@@ -15,3 +15,5 @@ All four topic repos are maintained in strict `E156` release mode.
 2. `hiv-e156`
 3. `maternal-health-e156`
 4. `hypertension-e156`
+
+_Generated from `MANIFEST.json` by `scripts/render_portfolio_assets.py`._
