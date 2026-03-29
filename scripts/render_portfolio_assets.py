@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "MANIFEST.json"
@@ -19,36 +20,41 @@ BADGES = [
 ]
 
 
-def load_manifest() -> list[dict[str, str]]:
-    return json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+def load_manifest() -> list[dict[str, Any]]:
+    entries = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    return sorted(entries, key=lambda entry: int(entry.get("portfolio_rank", 999)))
 
 
-def topic_display(entry: dict[str, str]) -> str:
-    value = entry["display"]
-    return "maternal health" if value == "pregnancy-related maternal health" else value
+def topic_display(entry: dict[str, Any]) -> str:
+    return str(entry["display"])
 
 
-def card_summary(entry: dict[str, str]) -> str:
+def topic_label(entry: dict[str, Any]) -> str:
+    value = topic_display(entry)
+    return value if value == "HIV" else value.title()
+
+
+def card_summary(entry: dict[str, Any]) -> str:
     notes = {
-        "malaria-e156": "Strongest shortlist signal and broadest African country spread in this portfolio.",
-        "hiv-e156": "Reusable lean designs exist, but they are more concentrated in established infrastructure hubs.",
+        "malaria-e156": "Strongest shortlist signal and broadest African country spread under these registry-based proxy measures.",
+        "hiv-e156": "Reusable smaller-footprint designs exist, but they are more concentrated in established infrastructure hubs.",
         "maternal-health-e156": "Smaller shortlist overall, but still contains lower-footprint pregnancy-related designs.",
         "hypertension-e156": "Weakest shortlist signal and longest Africa-side trial durations in this set.",
     }
     return notes[entry["repo"]]
 
 
-def card_detail(entry: dict[str, str]) -> str:
+def card_detail(entry: dict[str, Any]) -> str:
     details = {
-        "malaria-e156": "Best first repo if the question is which domain already shows the clearest lean African trial templates.",
-        "hiv-e156": "Useful if the aim is to study transfer templates in settings with stronger lab and follow-up systems.",
+        "malaria-e156": "Best first repo if the question is which domain shows the strongest proxy-based shortlist signal for smaller-footprint African trials.",
+        "hiv-e156": "Useful if the aim is to study transfer patterns in settings with stronger lab and follow-up systems.",
         "maternal-health-e156": "Worth using when the delivery question is focused on maternal or pregnancy-related operations.",
-        "hypertension-e156": "Best treated as a contrast case rather than the first model for low-burden African RCT delivery.",
+        "hypertension-e156": "Best treated as a contrast case rather than a first-pass template for smaller-footprint African trial delivery.",
     }
     return details[entry["repo"]]
 
 
-def matrix_readout(entry: dict[str, str]) -> str:
+def matrix_readout(entry: dict[str, Any]) -> str:
     return {
         "malaria-e156": "strongest cross-topic shortlist signal and broad African spread",
         "hiv-e156": "reusable lean designs, but more dependent on established trial hubs",
@@ -57,15 +63,15 @@ def matrix_readout(entry: dict[str, str]) -> str:
     }[entry["repo"]]
 
 
-def render_topic_cards(entries: list[dict[str, str]]) -> str:
+def render_topic_cards(entries: list[dict[str, Any]]) -> str:
     chunks: list[str] = []
     for idx, entry in enumerate(entries):
         featured = " featured" if idx == 0 else ""
-        badge = BADGES[idx] if idx < len(BADGES) else "Portfolio Topic"
+        badge = str(entry.get("portfolio_badge") or (BADGES[idx] if idx < len(BADGES) else "Portfolio Topic"))
         chunks.append(
             f"""          <a class="topic-card{featured}" href="{entry['public_url']}">
             <div class="topic-badge">{badge}</div>
-            <h3>{topic_display(entry).title() if topic_display(entry) != 'HIV' else 'HIV'}</h3>
+            <h3>{topic_label(entry)}</h3>
             <p>{card_summary(entry)}</p>
             <div class="topic-stats">
               <div><strong>{entry['k']}/{entry['n']}</strong><span>shortlist</span></div>
@@ -79,14 +85,14 @@ def render_topic_cards(entries: list[dict[str, str]]) -> str:
     return "\n".join(chunks)
 
 
-def render_snapshot(entries: list[dict[str, str]]) -> str:
+def render_snapshot(entries: list[dict[str, Any]]) -> str:
     return "\n".join(
-        f"          <li><strong>{topic_display(entry)}</strong>: <code>{entry['k']}/{entry['n']}</code> shortlist studies, proportion <code>{entry['proportion']}</code>, 95% CI <code>{entry['ci']}</code></li>"
+        f"          <li><strong>{topic_label(entry)}</strong>: <code>{entry['k']}/{entry['n']}</code> shortlist studies, proportion <code>{entry['proportion']}</code>, 95% CI <code>{entry['ci']}</code></li>"
         for entry in entries
     )
 
 
-def render_matrix(entries: list[dict[str, str]]) -> str:
+def render_matrix(entries: list[dict[str, Any]]) -> str:
     lines = [
         "# Topic Matrix",
         "",
@@ -97,25 +103,15 @@ def render_matrix(entries: list[dict[str, str]]) -> str:
     ]
     for entry in entries:
         lines.append(
-            f"| `{entry['repo']}` | `{entry['public_url'].replace('https://github.com/', '')}` | {entry['display']} | {entry['n']} | {entry['k']} | {entry['proportion']} | {entry['ci']} | {entry['median_duration_days']} | {entry['median_results_lag_days']} | {matrix_readout(entry)} |"
+            f"| `{entry['repo']}` | `{entry['public_url'].replace('https://github.com/', '')}` | {topic_label(entry)} | {entry['n']} | {entry['k']} | {entry['proportion']} | {entry['ci']} | {entry['median_duration_days']} | {entry['median_results_lag_days']} | {matrix_readout(entry)} |"
         )
-    lines.extend(
-        [
-            "",
-            "## Reading Order",
-            "",
-            "1. `malaria-e156`",
-            "2. `hiv-e156`",
-            "3. `maternal-health-e156`",
-            "4. `hypertension-e156`",
-            "",
-            "_Generated from `MANIFEST.json` by `scripts/render_portfolio_assets.py`._",
-        ]
-    )
+    lines.extend(["", "## Reading Order", ""])
+    lines.extend(f"{index}. `{entry['repo']}`" for index, entry in enumerate(entries, start=1))
+    lines.extend(["", "_Generated from `MANIFEST.json` by `scripts/render_portfolio_assets.py`._"])
     return "\n".join(lines) + "\n"
 
 
-def render_index(entries: list[dict[str, str]]) -> str:
+def render_index(entries: list[dict[str, Any]]) -> str:
     featured = entries[0]
     return f"""<!doctype html>
 <html lang="en">
@@ -237,6 +233,11 @@ def render_index(entries: list[dict[str, str]]) -> str:
 
     .topbar nav a:hover {{
       color: var(--teal-deep);
+    }}
+
+    a:focus-visible {{
+      outline: 3px solid var(--rust);
+      outline-offset: 3px;
     }}
 
     .hero-grid {{
@@ -608,6 +609,22 @@ def render_index(entries: list[dict[str, str]]) -> str:
       }}
     }}
 
+    @media (prefers-reduced-motion: reduce) {{
+      html {{
+        scroll-behavior: auto;
+      }}
+
+      * {{
+        animation: none !important;
+        transition: none !important;
+      }}
+
+      [data-reveal] {{
+        opacity: 1;
+        transform: none;
+      }}
+    }}
+
     @media (max-width: 1080px) {{
       .hero-grid,
       .topics,
@@ -675,9 +692,9 @@ def render_index(entries: list[dict[str, str]]) -> str:
       <div class="hero-grid">
         <section class="hero-copy" data-reveal="2">
           <div class="eyebrow">Strict E156 Releases</div>
-          <h1>Malaria first, four compact trial portfolios.</h1>
+          <h1>Four compact Africa-site RCT portfolios.</h1>
           <p class="lead">
-            This portfolio packages four Africa-site RCT topic scans as strict E156 publication units: one validated 156-word body per topic, plus companion code, data, and HTML artifacts. Malaria is the strongest first entry point if the goal is to find operationally lean African trial templates.
+            This portfolio packages four Africa-site RCT topic scans as strict E156 publication units: one validated 156-word body per topic, plus companion code, data, and HTML artifacts. Malaria is the strongest first entry point under these registry-based proxy measures if the goal is to find smaller-footprint, faster-reporting trial patterns.
           </p>
           <div class="hero-actions">
             <a class="button button-primary" href="{featured['public_url']}">Start With Malaria</a>
@@ -716,7 +733,7 @@ def render_index(entries: list[dict[str, str]]) -> str:
         <div class="section-head">
           <div>
             <h2>Topic Entry Points</h2>
-            <p>Each card links to a public repo with one validated E156 body and its companion files. The cards are ordered by practical starting value for cheap and fast Africa-relevant RCT templates.</p>
+            <p>Each card links to a public repo with one validated E156 body and its companion files. The cards are ordered by the strength of their registry-based shortlist signal, not by direct cost or effectiveness estimates.</p>
           </div>
         </div>
 
@@ -738,7 +755,7 @@ def render_index(entries: list[dict[str, str]]) -> str:
             <h3>For Fast Reading</h3>
             <ul>
               <li>Read the 156-word E156 body in each topic repo first.</li>
-              <li>Use malaria as the anchor topic for the strongest first signal.</li>
+              <li>Use malaria as the anchor topic for the strongest first proxy signal.</li>
               <li>Use the matrix to decide whether a second topic is worth deeper review.</li>
             </ul>
           </div>
@@ -754,12 +771,9 @@ def render_index(entries: list[dict[str, str]]) -> str:
 
         <div class="reading-grid" style="margin-top: 16px;">
           <div class="callout">
-            <h3>Suggested Reading Order</h3>
+            <h3>Suggested Review Order</h3>
             <ol>
-              <li>Malaria</li>
-              <li>HIV</li>
-              <li>Maternal health</li>
-              <li>Hypertension</li>
+              {"".join(f"<li>{topic_label(entry)}</li>" for entry in entries)}
             </ol>
           </div>
           <div class="callout">
@@ -791,15 +805,15 @@ def render_index(entries: list[dict[str, str]]) -> str:
           </a>
           <a href="MANIFEST.json">
             <strong>Manifest</strong>
-            <span>Machine-readable list of repo paths, public URLs, release mode, and headline metrics.</span>
+            <span>Machine-readable list of public URLs, ordering metadata, release mode, and headline metrics.</span>
           </a>
           <a href="data/topic_comparison.md">
             <strong>Topic Comparison Note</strong>
-            <span>Underlying cross-topic narrative explaining why malaria is the strongest first domain.</span>
+            <span>Underlying cross-topic narrative explaining why malaria has the strongest proxy-based signal in this scan.</span>
           </a>
           <a href="data/malaria_deep_dive_summary.md">
             <strong>Malaria Deep Dive</strong>
-            <span>Deeper malaria-only readout on structured outcomes and local versus external leadership heuristics.</span>
+            <span>Deeper malaria-only readout on structured outcomes, heuristic leadership tags, and several excluded off-topic registry hits.</span>
           </a>
         </div>
       </section>
@@ -809,7 +823,7 @@ def render_index(entries: list[dict[str, str]]) -> str:
   <footer>
     <div class="shell">
       <div class="footer-card">
-        <p>Primary public landing set: <code>mahmood726-cyber/malaria-e156</code>, <code>hiv-e156</code>, <code>hypertension-e156</code>, <code>maternal-health-e156</code>, and this umbrella repo.</p>
+        <p>Primary public landing set: <code>mahmood726-cyber/malaria-e156</code>, <code>hiv-e156</code>, <code>maternal-health-e156</code>, <code>hypertension-e156</code>, and this umbrella repo.</p>
         <a class="button button-secondary" href="https://github.com/mahmood726-cyber/africa-rct-e156-portfolio">Open portfolio repo</a>
       </div>
     </div>

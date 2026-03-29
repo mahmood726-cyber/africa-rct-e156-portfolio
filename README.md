@@ -4,21 +4,21 @@ This umbrella repo ties together the four topic-specific public repos generated 
 
 ## Headline
 
-Across the four scanned domains, malaria is the strongest starting point if the goal is to identify Africa-relevant RCT patterns that look more transferable to cheaper and faster delivery.
+Across the four scanned domains, malaria is the strongest starting point if the goal is to identify Africa-relevant RCT patterns with the strongest registry-based signal for smaller-footprint, faster-reporting trials.
 
 ## Start Here
 
 - Open `index.html` for the visual landing page.
 - Read [`TOPIC_MATRIX.md`](TOPIC_MATRIX.md) for the side-by-side comparison.
-- If you want the strongest first example set, start with `malaria-e156`.
+- If you want the strongest first example set under these registry-based proxy measures, start with `malaria-e156`.
 - If you want the underlying cross-topic narrative, read `data/topic_comparison.md`.
 
 ## Included Topic Repos
 
 - [`malaria-e156`](https://github.com/mahmood726-cyber/malaria-e156): strongest shortlist signal, broadest African country spread
 - [`hiv-e156`](https://github.com/mahmood726-cyber/hiv-e156): useful lean designs, but more concentrated in established infrastructure hubs
-- [`hypertension-e156`](https://github.com/mahmood726-cyber/hypertension-e156): weakest shortlist signal and longest Africa-side durations in this set
 - [`maternal-health-e156`](https://github.com/mahmood726-cyber/maternal-health-e156): smaller but still useful pregnancy-related shortlist
+- [`hypertension-e156`](https://github.com/mahmood726-cyber/hypertension-e156): weakest shortlist signal and longest Africa-side durations in this set
 
 ## Active Release Model
 
@@ -38,7 +38,7 @@ Across the four scanned domains, malaria is the strongest starting point if the 
 - Use the E156 body in each topic repo for the compact publication unit.
 - Use the topic repo `paper/index.html` file for the richer interactive companion.
 - Use the repo `data/` and `code/` folders if you want to inspect or extend the benchmark.
-- Use `MANIFEST.json` if you want machine-readable repo paths, URLs, and headline metrics.
+- Use `MANIFEST.json` if you want machine-readable public URLs, ordering metadata, and headline metrics.
 
 ## Regeneration
 
@@ -50,5 +50,5 @@ Across the four scanned domains, malaria is the strongest starting point if the 
 - `index.html`: visual landing page and repo entry point
 - `TOPIC_MATRIX.md`: side-by-side topic snapshot
 - `data/topic_comparison.md`: copied comparison note
-- `MANIFEST.json`: local repo paths and key metrics
+- `MANIFEST.json`: public repo metadata, ordering, and key metrics
 - `data/malaria_deep_dive_summary.md`: malaria-only deeper operational and leadership readout

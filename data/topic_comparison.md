@@ -9,7 +9,7 @@ This compares four focused scans run on March 28, 2026:
 
 ## Headline
 
-If the goal is to find Africa-relevant RCT patterns that are most transferable to cheaper and faster delivery, `malaria` is the strongest domain in this scan.
+If the goal is to find Africa-relevant RCT patterns with the strongest registry-based signal for smaller-footprint, faster-reporting trials, `malaria` is the strongest domain in this scan.
 
 Why:
 
@@ -27,11 +27,11 @@ Why:
 
 ## Practical Reading
 
-- `malaria` looks most promising for operationally lean Africa-based RCT designs.
+- `malaria` has the strongest registry-based shortlist signal for smaller-footprint Africa-site RCT designs.
 - `hiv` has a decent shortlist, but is more concentrated in South Africa, Kenya, and Uganda and often depends on stronger existing trial infrastructure.
 - `maternal_health` has useful small-footprint studies, especially behavioral designs, but fewer than malaria.
 - `hypertension` has the smallest shortlist and the longest median duration in the Africa subset.
 
 ## Important Caveat
 
-This still measures registry-visible operational proxies, not true cost or clinical effectiveness.
+This still measures registry-visible operational proxies, not true cost, clinical effectiveness, or full implementation burden.

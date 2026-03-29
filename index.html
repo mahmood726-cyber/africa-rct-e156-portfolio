@@ -120,6 +120,11 @@
       color: var(--teal-deep);
     }
 
+    a:focus-visible {
+      outline: 3px solid var(--rust);
+      outline-offset: 3px;
+    }
+
     .hero-grid {
       display: grid;
       grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.85fr);
@@ -489,6 +494,22 @@
       }
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      [data-reveal] {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
     @media (max-width: 1080px) {
       .hero-grid,
       .topics,
@@ -556,9 +577,9 @@
       <div class="hero-grid">
         <section class="hero-copy" data-reveal="2">
           <div class="eyebrow">Strict E156 Releases</div>
-          <h1>Malaria first, four compact trial portfolios.</h1>
+          <h1>Four compact Africa-site RCT portfolios.</h1>
           <p class="lead">
-            This portfolio packages four Africa-site RCT topic scans as strict E156 publication units: one validated 156-word body per topic, plus companion code, data, and HTML artifacts. Malaria is the strongest first entry point if the goal is to find operationally lean African trial templates.
+            This portfolio packages four Africa-site RCT topic scans as strict E156 publication units: one validated 156-word body per topic, plus companion code, data, and HTML artifacts. Malaria is the strongest first entry point under these registry-based proxy measures if the goal is to find smaller-footprint, faster-reporting trial patterns.
           </p>
           <div class="hero-actions">
             <a class="button button-primary" href="https://github.com/mahmood726-cyber/malaria-e156">Start With Malaria</a>
@@ -597,7 +618,7 @@
         <div class="section-head">
           <div>
             <h2>Topic Entry Points</h2>
-            <p>Each card links to a public repo with one validated E156 body and its companion files. The cards are ordered by practical starting value for cheap and fast Africa-relevant RCT templates.</p>
+            <p>Each card links to a public repo with one validated E156 body and its companion files. The cards are ordered by the strength of their registry-based shortlist signal, not by direct cost or effectiveness estimates.</p>
           </div>
         </div>
 
@@ -605,41 +626,29 @@
           <a class="topic-card featured" href="https://github.com/mahmood726-cyber/malaria-e156">
             <div class="topic-badge">Recommended First</div>
             <h3>Malaria</h3>
-            <p>Strongest shortlist signal and broadest African country spread in this portfolio.</p>
+            <p>Strongest shortlist signal and broadest African country spread under these registry-based proxy measures.</p>
             <div class="topic-stats">
               <div><strong>27/80</strong><span>shortlist</span></div>
               <div><strong>0.34</strong><span>proportion</span></div>
               <div><strong>619.0</strong><span>median duration</span></div>
             </div>
-            <p>Best first repo if the question is which domain already shows the clearest lean African trial templates.</p>
+            <p>Best first repo if the question is which domain shows the strongest proxy-based shortlist signal for smaller-footprint African trials.</p>
             <span class="topic-link">Open repo</span>
           </a>
           <a class="topic-card" href="https://github.com/mahmood726-cyber/hiv-e156">
             <div class="topic-badge">Second Pass</div>
             <h3>HIV</h3>
-            <p>Reusable lean designs exist, but they are more concentrated in established infrastructure hubs.</p>
+            <p>Reusable smaller-footprint designs exist, but they are more concentrated in established infrastructure hubs.</p>
             <div class="topic-stats">
               <div><strong>18/80</strong><span>shortlist</span></div>
               <div><strong>0.23</strong><span>proportion</span></div>
               <div><strong>824.5</strong><span>median duration</span></div>
             </div>
-            <p>Useful if the aim is to study transfer templates in settings with stronger lab and follow-up systems.</p>
-            <span class="topic-link">Open repo</span>
-          </a>
-          <a class="topic-card" href="https://github.com/mahmood726-cyber/hypertension-e156">
-            <div class="topic-badge">Selective Use</div>
-            <h3>Hypertension</h3>
-            <p>Weakest shortlist signal and longest Africa-side trial durations in this set.</p>
-            <div class="topic-stats">
-              <div><strong>8/65</strong><span>shortlist</span></div>
-              <div><strong>0.12</strong><span>proportion</span></div>
-              <div><strong>999.0</strong><span>median duration</span></div>
-            </div>
-            <p>Best treated as a contrast case rather than the first model for low-burden African RCT delivery.</p>
+            <p>Useful if the aim is to study transfer patterns in settings with stronger lab and follow-up systems.</p>
             <span class="topic-link">Open repo</span>
           </a>
           <a class="topic-card" href="https://github.com/mahmood726-cyber/maternal-health-e156">
-            <div class="topic-badge">Lowest Priority</div>
+            <div class="topic-badge">Selective Use</div>
             <h3>Maternal Health</h3>
             <p>Smaller shortlist overall, but still contains lower-footprint pregnancy-related designs.</p>
             <div class="topic-stats">
@@ -648,6 +657,18 @@
               <div><strong>902.0</strong><span>median duration</span></div>
             </div>
             <p>Worth using when the delivery question is focused on maternal or pregnancy-related operations.</p>
+            <span class="topic-link">Open repo</span>
+          </a>
+          <a class="topic-card" href="https://github.com/mahmood726-cyber/hypertension-e156">
+            <div class="topic-badge">Lowest Priority</div>
+            <h3>Hypertension</h3>
+            <p>Weakest shortlist signal and longest Africa-side trial durations in this set.</p>
+            <div class="topic-stats">
+              <div><strong>8/65</strong><span>shortlist</span></div>
+              <div><strong>0.12</strong><span>proportion</span></div>
+              <div><strong>999.0</strong><span>median duration</span></div>
+            </div>
+            <p>Best treated as a contrast case rather than a first-pass template for smaller-footprint African trial delivery.</p>
             <span class="topic-link">Open repo</span>
           </a>
         </div>
@@ -666,7 +687,7 @@
             <h3>For Fast Reading</h3>
             <ul>
               <li>Read the 156-word E156 body in each topic repo first.</li>
-              <li>Use malaria as the anchor topic for the strongest first signal.</li>
+              <li>Use malaria as the anchor topic for the strongest first proxy signal.</li>
               <li>Use the matrix to decide whether a second topic is worth deeper review.</li>
             </ul>
           </div>
@@ -682,12 +703,9 @@
 
         <div class="reading-grid" style="margin-top: 16px;">
           <div class="callout">
-            <h3>Suggested Reading Order</h3>
+            <h3>Suggested Review Order</h3>
             <ol>
-              <li>Malaria</li>
-              <li>HIV</li>
-              <li>Maternal health</li>
-              <li>Hypertension</li>
+              <li>Malaria</li><li>HIV</li><li>Maternal Health</li><li>Hypertension</li>
             </ol>
           </div>
           <div class="callout">
@@ -699,10 +717,10 @@
         <div class="callout" style="margin-top: 16px;">
           <h3>Portfolio Snapshot</h3>
           <ul class="snapshot-list">
-          <li><strong>malaria</strong>: <code>27/80</code> shortlist studies, proportion <code>0.34</code>, 95% CI <code>0.24 to 0.45</code></li>
+          <li><strong>Malaria</strong>: <code>27/80</code> shortlist studies, proportion <code>0.34</code>, 95% CI <code>0.24 to 0.45</code></li>
           <li><strong>HIV</strong>: <code>18/80</code> shortlist studies, proportion <code>0.23</code>, 95% CI <code>0.15 to 0.33</code></li>
-          <li><strong>hypertension</strong>: <code>8/65</code> shortlist studies, proportion <code>0.12</code>, 95% CI <code>0.06 to 0.22</code></li>
-          <li><strong>maternal health</strong>: <code>12/80</code> shortlist studies, proportion <code>0.15</code>, 95% CI <code>0.09 to 0.24</code></li>
+          <li><strong>Maternal Health</strong>: <code>12/80</code> shortlist studies, proportion <code>0.15</code>, 95% CI <code>0.09 to 0.24</code></li>
+          <li><strong>Hypertension</strong>: <code>8/65</code> shortlist studies, proportion <code>0.12</code>, 95% CI <code>0.06 to 0.22</code></li>
           </ul>
         </div>
       </section>
@@ -722,15 +740,15 @@
           </a>
           <a href="MANIFEST.json">
             <strong>Manifest</strong>
-            <span>Machine-readable list of repo paths, public URLs, release mode, and headline metrics.</span>
+            <span>Machine-readable list of public URLs, ordering metadata, release mode, and headline metrics.</span>
           </a>
           <a href="data/topic_comparison.md">
             <strong>Topic Comparison Note</strong>
-            <span>Underlying cross-topic narrative explaining why malaria is the strongest first domain.</span>
+            <span>Underlying cross-topic narrative explaining why malaria has the strongest proxy-based signal in this scan.</span>
           </a>
           <a href="data/malaria_deep_dive_summary.md">
             <strong>Malaria Deep Dive</strong>
-            <span>Deeper malaria-only readout on structured outcomes and local versus external leadership heuristics.</span>
+            <span>Deeper malaria-only readout on structured outcomes, heuristic leadership tags, and several excluded off-topic registry hits.</span>
           </a>
         </div>
       </section>
@@ -740,7 +758,7 @@
   <footer>
     <div class="shell">
       <div class="footer-card">
-        <p>Primary public landing set: <code>mahmood726-cyber/malaria-e156</code>, <code>hiv-e156</code>, <code>hypertension-e156</code>, <code>maternal-health-e156</code>, and this umbrella repo.</p>
+        <p>Primary public landing set: <code>mahmood726-cyber/malaria-e156</code>, <code>hiv-e156</code>, <code>maternal-health-e156</code>, <code>hypertension-e156</code>, and this umbrella repo.</p>
         <a class="button button-secondary" href="https://github.com/mahmood726-cyber/africa-rct-e156-portfolio">Open portfolio repo</a>
       </div>
     </div>
