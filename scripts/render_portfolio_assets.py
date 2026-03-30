@@ -72,6 +72,10 @@ def repo_tree_url(entry: dict[str, Any], relpath: str) -> str:
     return f"{entry['public_url']}/tree/main/{relpath}"
 
 
+def repo_manuscript_url(entry: dict[str, Any]) -> str:
+    return repo_blob_url(entry, "submission/MANUSCRIPT.md")
+
+
 def portfolio_blob_url(relpath: str) -> str:
     return f"{PORTFOLIO_PUBLIC_URL}/blob/main/{relpath}"
 
@@ -93,7 +97,7 @@ def render_topic_cards(entries: list[dict[str, Any]]) -> str:
             </div>
             <p>{card_detail(entry)}</p>
             <div class="topic-actions">
-              <a class="topic-action topic-action-primary" href="{repo_blob_url(entry, 'paper/e156_body.md')}">Read E156</a>
+              <a class="topic-action topic-action-primary" href="{repo_manuscript_url(entry)}">Read Paper</a>
               <a class="topic-action" href="{repo_tree_url(entry, 'data')}">Data</a>
               <a class="topic-action" href="{repo_tree_url(entry, 'code')}">Code</a>
               <a class="topic-action" href="{entry['public_url']}">Repo</a>
@@ -776,7 +780,7 @@ def render_index(entries: list[dict[str, Any]]) -> str:
             This portfolio packages four Africa-site RCT topic scans as strict E156 publication units: one validated 156-word body per topic, plus companion code, data, and HTML artifacts. Malaria is the strongest first entry point under these registry-based proxy measures if the goal is to find smaller-footprint, faster-reporting trial patterns.
           </p>
           <div class="hero-actions">
-            <a class="button button-primary" href="{repo_blob_url(featured, 'paper/e156_body.md')}">Read Malaria E156</a>
+            <a class="button button-primary" href="{repo_manuscript_url(featured)}">Read Malaria Paper</a>
             <a class="button button-secondary" href="#topics">Compare All Topics</a>
           </div>
         </section>
@@ -833,7 +837,7 @@ def render_index(entries: list[dict[str, Any]]) -> str:
           <div class="callout">
             <h3>For Fast Reading</h3>
             <ul>
-              <li>Read the 156-word E156 body in each topic repo first.</li>
+              <li>Read the manuscript wrapper in each topic repo first.</li>
               <li>Use malaria as the anchor topic for the strongest first proxy signal.</li>
               <li>Use the matrix to decide whether a second topic is worth deeper review.</li>
             </ul>
@@ -841,8 +845,8 @@ def render_index(entries: list[dict[str, Any]]) -> str:
           <div class="callout">
             <h3>For Deeper Inspection</h3>
             <ul>
-              <li>Use the topic buttons to jump straight to each repo’s E156 body, data files, and code files.</li>
-              <li>Open each repo’s <code>paper/</code> folder if you want the companion HTML and the rest of the paper bundle.</li>
+              <li>Use the topic buttons to jump straight to each repo’s manuscript wrapper, data files, and code files.</li>
+              <li>Open each repo’s <code>paper/</code> folder if you want the companion HTML and the fixed 156-word body.</li>
               <li>Use the repo <code>data/</code> folders for benchmark outputs and shortlist files.</li>
               <li>Use the repo <code>code/</code> folders if you want to rerun or extend the scans.</li>
             </ul>
