@@ -2,13 +2,18 @@
 
 This umbrella repo ties together the four topic-specific public repos generated from the Africa-site ClinicalTrials.gov scan. All four active paper releases use strict E156 format: one validated 156-word body plus companion artifacts.
 
+## Live Site
+
+- GitHub Pages: https://mahmood726-cyber.github.io/africa-rct-e156-portfolio/
+- The live landing page is generated from `MANIFEST.json` by `scripts/render_portfolio_assets.py` and deployed by `.github/workflows/deploy-pages.yml`.
+
 ## Headline
 
 Across the four scanned domains, malaria is the strongest starting point if the goal is to identify Africa-relevant RCT patterns with the strongest registry-based signal for smaller-footprint, faster-reporting trials.
 
 ## Start Here
 
-- Open `index.html` for the visual landing page.
+- Open the GitHub Pages site first for the visual landing page.
 - Read [`TOPIC_MATRIX.md`](TOPIC_MATRIX.md) for the side-by-side comparison.
 - If you want the strongest first example set under these registry-based proxy measures, start with `malaria-e156`.
 - If you want the underlying cross-topic narrative, read `data/topic_comparison.md`.
@@ -48,7 +53,10 @@ Across the four scanned domains, malaria is the strongest starting point if the 
 ## Included Portfolio Files
 
 - `index.html`: visual landing page and repo entry point
+- `404.html`: Pages fallback that returns readers to the landing page
+- `robots.txt` and `sitemap.xml`: basic search/discovery support for the live Pages site
 - `TOPIC_MATRIX.md`: side-by-side topic snapshot
 - `data/topic_comparison.md`: copied comparison note
 - `MANIFEST.json`: public repo metadata, ordering, and key metrics
 - `data/malaria_deep_dive_summary.md`: malaria-only deeper operational and leadership readout
+- `.github/workflows/deploy-pages.yml`: GitHub Pages deployment workflow

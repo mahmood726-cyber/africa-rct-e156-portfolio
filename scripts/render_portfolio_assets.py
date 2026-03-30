@@ -10,8 +10,15 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "MANIFEST.json"
 INDEX_PATH = ROOT / "index.html"
+NOT_FOUND_PATH = ROOT / "404.html"
+ROBOTS_PATH = ROOT / "robots.txt"
+SITEMAP_PATH = ROOT / "sitemap.xml"
 MATRIX_PATH = ROOT / "TOPIC_MATRIX.md"
-PORTFOLIO_PUBLIC_URL = "https://github.com/mahmood726-cyber/africa-rct-e156-portfolio"
+NOJEKYLL_PATH = ROOT / ".nojekyll"
+GITHUB_OWNER = "mahmood726-cyber"
+PORTFOLIO_REPO = "africa-rct-e156-portfolio"
+PORTFOLIO_PUBLIC_URL = f"https://github.com/{GITHUB_OWNER}/{PORTFOLIO_REPO}"
+PORTFOLIO_SITE_URL = f"https://{GITHUB_OWNER}.github.io/{PORTFOLIO_REPO}/"
 
 BADGES = [
     "Recommended First",
@@ -142,6 +149,16 @@ def render_index(entries: list[dict[str, Any]]) -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Africa RCT E156 Portfolio</title>
   <meta name="description" content="A portfolio of four strict E156 micro-papers on Africa-site randomized trials, with malaria as the strongest first entry point under registry-based proxy measures for smaller-footprint, faster-reporting trial patterns.">
+  <meta name="theme-color" content="#1f7a72">
+  <link rel="canonical" href="{PORTFOLIO_SITE_URL}">
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="{PORTFOLIO_SITE_URL}sitemap.xml">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Africa RCT E156 Portfolio">
+  <meta property="og:description" content="Four strict E156 micro-papers on Africa-site randomized trials, with malaria as the strongest first entry point under registry-based proxy measures.">
+  <meta property="og:url" content="{PORTFOLIO_SITE_URL}">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Africa RCT E156 Portfolio">
+  <meta name="twitter:description" content="Four strict E156 micro-papers on Africa-site randomized trials, led by a malaria-first entry point.">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap');
 
@@ -907,8 +924,8 @@ def render_index(entries: list[dict[str, Any]]) -> str:
   <footer>
     <div class="shell">
       <div class="footer-card">
-        <p>Primary public landing set: <code>mahmood726-cyber/malaria-e156</code>, <code>hiv-e156</code>, <code>maternal-health-e156</code>, <code>hypertension-e156</code>, and this umbrella repo.</p>
-        <a class="button button-secondary" href="https://github.com/mahmood726-cyber/africa-rct-e156-portfolio">Open portfolio repo</a>
+        <p>Primary public landing set: <code>mahmood726-cyber/malaria-e156</code>, <code>hiv-e156</code>, <code>maternal-health-e156</code>, <code>hypertension-e156</code>, and this umbrella repo. Live Pages URL: <a href="{PORTFOLIO_SITE_URL}">{PORTFOLIO_SITE_URL}</a></p>
+        <a class="button button-secondary" href="{PORTFOLIO_PUBLIC_URL}">Open portfolio repo</a>
       </div>
     </div>
   </footer>
@@ -917,10 +934,127 @@ def render_index(entries: list[dict[str, Any]]) -> str:
 """
 
 
+def render_not_found() -> str:
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Not Found | Africa RCT E156 Portfolio</title>
+  <meta name="robots" content="noindex">
+  <meta http-equiv="refresh" content="0; url={PORTFOLIO_SITE_URL}">
+  <link rel="canonical" href="{PORTFOLIO_SITE_URL}">
+  <style>
+    :root {{
+      --bg: #f7f1e3;
+      --surface: rgba(255, 252, 243, 0.94);
+      --ink: #1f2d2a;
+      --muted: #586a63;
+      --teal: #1f7a72;
+      --line: rgba(31, 45, 42, 0.12);
+    }}
+
+    * {{
+      box-sizing: border-box;
+    }}
+
+    body {{
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 14% 16%, rgba(215, 169, 59, 0.24), transparent 28%),
+        radial-gradient(circle at 86% 12%, rgba(31, 122, 114, 0.18), transparent 26%),
+        linear-gradient(180deg, #fbf7eb 0%, var(--bg) 42%, #f4edd8 100%);
+      color: var(--ink);
+      font-family: "Source Serif 4", Georgia, serif;
+    }}
+
+    main {{
+      width: min(700px, 100%);
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--surface);
+      box-shadow: 0 24px 70px rgba(32, 43, 39, 0.14);
+      text-align: center;
+    }}
+
+    h1 {{
+      margin: 0 0 12px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      letter-spacing: -0.05em;
+    }}
+
+    p {{
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }}
+
+    a {{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 22px;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--teal), #0f5f58);
+      color: #fffaf3;
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+      text-decoration: none;
+    }}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Back to the portfolio.</h1>
+    <p>The requested page was not found. This Pages site publishes a small live entry point for the Africa RCT E156 portfolio, so the safest next step is to return to the main landing page.</p>
+    <a href="{PORTFOLIO_SITE_URL}">Open the portfolio landing page</a>
+  </main>
+</body>
+</html>
+"""
+
+
+def render_robots() -> str:
+    return "\n".join(
+        [
+            "User-agent: *",
+            "Allow: /",
+            f"Sitemap: {PORTFOLIO_SITE_URL}sitemap.xml",
+            "",
+        ]
+    )
+
+
+def render_sitemap() -> str:
+    return "\n".join(
+        [
+            '<?xml version="1.0" encoding="UTF-8"?>',
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+            "  <url>",
+            f"    <loc>{PORTFOLIO_SITE_URL}</loc>",
+            "  </url>",
+            "</urlset>",
+            "",
+        ]
+    )
+
+
 def main() -> None:
     entries = load_manifest()
     INDEX_PATH.write_text(render_index(entries), encoding="utf-8")
     MATRIX_PATH.write_text(render_matrix(entries), encoding="utf-8")
+    NOT_FOUND_PATH.write_text(render_not_found(), encoding="utf-8")
+    ROBOTS_PATH.write_text(render_robots(), encoding="utf-8")
+    SITEMAP_PATH.write_text(render_sitemap(), encoding="utf-8")
+    NOJEKYLL_PATH.write_text("", encoding="utf-8")
 
 
 if __name__ == "__main__":

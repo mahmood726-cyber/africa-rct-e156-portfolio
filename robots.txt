@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mahmood726-cyber.github.io/africa-rct-e156-portfolio/sitemap.xml
