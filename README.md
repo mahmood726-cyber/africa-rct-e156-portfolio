@@ -48,7 +48,7 @@ Across the four scanned domains, malaria is the strongest starting point if the 
 ## Regeneration
 
 - `index.html` and `TOPIC_MATRIX.md` are generated from `MANIFEST.json`.
-- Rebuild them with `python3 scripts/render_portfolio_assets.py`.
+- Rebuild them with `python scripts/render_portfolio_assets.py` (Windows) or `python3 scripts/render_portfolio_assets.py` (Linux/macOS).
 
 ## Included Portfolio Files
 

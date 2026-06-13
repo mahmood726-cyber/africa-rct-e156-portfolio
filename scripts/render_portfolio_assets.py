@@ -925,6 +925,7 @@ def render_index(entries: list[dict[str, Any]]) -> str:
     <div class="shell">
       <div class="footer-card">
         <p>Primary public landing set: <code>mahmood726-cyber/malaria-e156</code>, <code>hiv-e156</code>, <code>maternal-health-e156</code>, <code>hypertension-e156</code>, and this umbrella repo. Live Pages URL: <a href="{PORTFOLIO_SITE_URL}">{PORTFOLIO_SITE_URL}</a></p>
+        <p>Registry data source: <a href="https://clinicaltrials.gov/study/NCT04940130">ClinicalTrials.gov</a> (March 28, 2026 scan; representative accession NCT04940130). Shortlist proportions and CIs are derived from the registry-based proxy benchmark; see <code>MANIFEST.json</code> and topic repo <code>data/</code> folders for full accession lists.</p>
         <a class="button button-secondary" href="{PORTFOLIO_PUBLIC_URL}">Open portfolio repo</a>
       </div>
     </div>
